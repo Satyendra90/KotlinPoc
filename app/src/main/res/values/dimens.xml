@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="dp_5">5dp</dimen>
+    <dimen name="dp_8">8dp</dimen>
+    <dimen name="dp_20">20dp</dimen>
+    <dimen name="image_new_feed_width">125dp</dimen>
+    <dimen name="image_new_feed_height">80dp</dimen>
+
+</resources>
