@@ -1,4 +1,4 @@
-package learning.com.kotlinsample.repository
+package com.kotlin.poc.repository
 
 import com.kotlin.poc.model.ApiDataWrapper
 import com.kotlin.poc.model.ApiError

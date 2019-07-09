@@ -21,22 +21,27 @@ class ApiModule {
 
     @Provides
     @Singleton
-    fun provideGson() : Gson{
-        val gsonBuilder = GsonBuilder()
-        return gsonBuilder.create()
+    fun provideOkHttpClient() : OkHttpClient{
+        val logInterceptor = HttpLoggingInterceptor()
+        if(BuildConfig.enableLog){
+            logInterceptor.level = HttpLoggingInterceptor.Level.BODY
+        }
+        else{
+            logInterceptor.level = HttpLoggingInterceptor.Level.NONE
+        }
+
+        val httpClient = OkHttpClient.Builder()
+        httpClient.addInterceptor(logInterceptor)
+        httpClient.connectTimeout(30, TimeUnit.SECONDS)
+        httpClient.readTimeout(30, TimeUnit.SECONDS)
+        return httpClient.build()
     }
 
     @Provides
     @Singleton
-    fun provideOkHttpClient() : OkHttpClient{
-        val logging = HttpLoggingInterceptor()
-        logging.level = HttpLoggingInterceptor.Level.BODY
-
-        val httpClient = OkHttpClient.Builder()
-        httpClient.addInterceptor(logging)
-        httpClient.connectTimeout(30, TimeUnit.SECONDS)
-        httpClient.readTimeout(30, TimeUnit.SECONDS)
-        return httpClient.build()
+    fun provideGson() : Gson{
+        val gsonBuilder = GsonBuilder()
+        return gsonBuilder.create()
     }
 
     @Provides

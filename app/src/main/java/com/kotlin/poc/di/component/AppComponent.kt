@@ -13,7 +13,7 @@ import javax.inject.Singleton
 @Component(modules = [ApiModule::class])
 interface AppComponent {
 
-    fun inject(application: NewsFeedApplication)
-
     fun getApiInterface(): ApiInterface
+
+    fun inject(application: NewsFeedApplication)
 }
