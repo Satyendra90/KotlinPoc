@@ -15,18 +15,23 @@ import com.kotlin.poc.webservice.ApiInterface
  */
 class NewsFeedViewModel : ViewModel() {
 
+    private val apiInterface: ApiInterface = NewsFeedApplication.getAppInstance().getApiInterface()
+    private var newsFeedRepository: NewsFeedRepository = NewsFeedRepository(apiInterface)
+
     private val newsFeeds : MutableLiveData<ApiDataWrapper<NewsFeedResponse>> by lazy {
         MutableLiveData<ApiDataWrapper<NewsFeedResponse>>().also {
             loadNewsFeed()
         }
     }
 
-    private val apiInterface: ApiInterface = NewsFeedApplication.getAppInstance().getApiInterface()
-
-    private var newsFeedRepository: NewsFeedRepository = NewsFeedRepository(apiInterface)
-
     fun getNewsFeedList() : LiveData<ApiDataWrapper<NewsFeedResponse>>{
         return newsFeeds
+    }
+
+    private val loadingLiveData = MutableLiveData<Boolean>()
+
+    fun getLoadingLiveData(): LiveData<Boolean>{
+        return loadingLiveData
     }
 
     /**
@@ -40,10 +45,16 @@ class NewsFeedViewModel : ViewModel() {
      * will get the news feed data from repository
      */
     private fun loadNewsFeed(){
+        setLoadingVisibility(true)
         newsFeedRepository.getNewsFeed(object: NewsFeedDataCallback {
             override fun onNewsFeedLoaded(data: ApiDataWrapper<NewsFeedResponse>) {
                 newsFeeds.postValue(data)
+                setLoadingVisibility(false)
             }
         })
+    }
+
+    private fun setLoadingVisibility(visible: Boolean){
+        loadingLiveData.postValue(visible)
     }
 }

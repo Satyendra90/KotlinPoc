@@ -43,7 +43,6 @@ class MainActivity : BaseActivity() {
     private fun initializeRecyclerView() {
         rvNewsFeed.setHasFixedSize(true)
         rvNewsFeed.layoutManager = LinearLayoutManager(this)
-        rvNewsFeed.addItemDecoration(ItemOffsetDecoration(this, R.dimen.dp_5))
 
         adapter = NewsFeedAdapter(this)
         rvNewsFeed.adapter = adapter
@@ -64,9 +63,16 @@ class MainActivity : BaseActivity() {
                     showNetworkErrorMessage(it.error)
                 }
             }
-            hideLoader()
         })
-        showLoader()
+
+        viewModel.getLoadingLiveData().observe(this, Observer {
+            if(it!!){
+                showLoader()
+            }
+            else{
+                hideLoader()
+            }
+        })
     }
 
     /**
@@ -76,7 +82,6 @@ class MainActivity : BaseActivity() {
         swipeRefreshLayout.setOnRefreshListener {
             viewModel.refreshNewsFeed()
         }
-        showLoader()
     }
 
     /**
