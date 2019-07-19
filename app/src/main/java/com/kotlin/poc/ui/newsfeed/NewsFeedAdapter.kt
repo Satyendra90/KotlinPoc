@@ -1,4 +1,4 @@
-package com.kotlin.poc.ui.adapter
+package com.kotlin.poc.ui.newsfeed
 
 import android.content.Context
 import android.graphics.drawable.Drawable

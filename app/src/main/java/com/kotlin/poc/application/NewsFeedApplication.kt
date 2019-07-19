@@ -1,19 +1,19 @@
-package com.kotlin.poc
+package com.kotlin.poc.application
 
 import android.app.Application
 import com.kotlin.poc.di.component.AppComponent
 import com.kotlin.poc.di.component.DaggerAppComponent
 import com.kotlin.poc.di.module.ApiModule
-import com.kotlin.poc.webservice.ApiInterface
+import com.kotlin.poc.webservice.NewsFeedApi
 
 class NewsFeedApplication : Application() {
 
-    private lateinit var appComponent: AppComponent
+    lateinit var appComponent: AppComponent
 
     companion object {
         private lateinit var instance: NewsFeedApplication
 
-        fun getAppInstance(): NewsFeedApplication{
+        fun getAppInstance(): NewsFeedApplication {
             return instance
         }
     }
@@ -22,13 +22,5 @@ class NewsFeedApplication : Application() {
         super.onCreate()
         instance = this
         appComponent = DaggerAppComponent.builder().apiModule(ApiModule()).build()
-        appComponent.inject(this)
-    }
-
-    /**
-     * will provide the api interface object for api call
-     */
-    fun getApiInterface(): ApiInterface {
-        return appComponent.getApiInterface()
     }
 }

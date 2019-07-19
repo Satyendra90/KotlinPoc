@@ -1,4 +1,4 @@
-package com.kotlin.poc.ui.activity
+package com.kotlin.poc.ui.newsfeed
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
@@ -7,11 +7,13 @@ import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.widget.Toast
 import com.kotlin.poc.R
+import com.kotlin.poc.application.NewsFeedApplication
+import com.kotlin.poc.factory.NewsFeedViewModelFactory
 import com.kotlin.poc.model.*
-import com.kotlin.poc.ui.adapter.NewsFeedAdapter
-import com.kotlin.poc.ui.viewmodel.NewsFeedViewModel
-import com.kotlin.poc.utils.ItemOffsetDecoration
+import com.kotlin.poc.ui.base.BaseActivity
+import com.kotlin.poc.webservice.NewsFeedApi
 import kotlinx.android.synthetic.main.activity_main.*
+import javax.inject.Inject
 
 /**
  * Activity will show list of news feed
@@ -20,6 +22,8 @@ class MainActivity : BaseActivity() {
 
     private lateinit var adapter: NewsFeedAdapter
     private lateinit var viewModel: NewsFeedViewModel
+
+    @Inject lateinit var newsFeedApi: NewsFeedApi
 
     override fun getLayoutId(): Int {
         return R.layout.activity_main
@@ -31,6 +35,7 @@ class MainActivity : BaseActivity() {
 
     override fun initEventAndData(savedInstanceState: Bundle?) {
         setSupportActionBar(toolbar)
+        NewsFeedApplication.getAppInstance().appComponent.inject(this)
         initializeRecyclerView()
         initializeViewModel()
         registerSwipeRefreshListener()
@@ -53,8 +58,8 @@ class MainActivity : BaseActivity() {
      * register the observer
      */
     private fun initializeViewModel() {
-        viewModel = ViewModelProviders.of(this).get(NewsFeedViewModel::class.java)
-        viewModel.getNewsFeedList().observe(this, Observer<ApiDataWrapper<NewsFeedResponse>> {
+        viewModel = ViewModelProviders.of(this, NewsFeedViewModelFactory(newsFeedApi)).get(NewsFeedViewModel::class.java)
+        viewModel.getNewsFeedListLiveData().observe(this, Observer<ApiDataWrapper<NewsFeedResponse>> {
 
             if (it != null) {
                 if (it.isSuccess) {
@@ -65,7 +70,7 @@ class MainActivity : BaseActivity() {
             }
         })
 
-        viewModel.getLoadingLiveData().observe(this, Observer {
+        viewModel.isLoadingLiveData().observe(this, Observer {
             if(it!!){
                 showLoader()
             }

@@ -3,12 +3,13 @@ package com.kotlin.poc.di.module
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.kotlin.poc.BuildConfig
-import com.kotlin.poc.webservice.ApiInterface
+import com.kotlin.poc.webservice.NewsFeedApi
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
@@ -23,7 +24,7 @@ class ApiModule {
     @Singleton
     fun provideOkHttpClient() : OkHttpClient{
         val logInterceptor = HttpLoggingInterceptor()
-        if(BuildConfig.enableLog){
+        if(BuildConfig.LOG_ENABLED){
             logInterceptor.level = HttpLoggingInterceptor.Level.BODY
         }
         else{
@@ -49,6 +50,7 @@ class ApiModule {
     fun provideRetrofit(gson: Gson, okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create(gson))
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .baseUrl(BuildConfig.BASE_URL)
                 .client(okHttpClient)
                 .build()
@@ -56,8 +58,8 @@ class ApiModule {
 
     @Provides
     @Singleton
-    fun provideApiInterface(retrofit: Retrofit): ApiInterface {
-        return retrofit.create(ApiInterface::class.java)
+    fun provideApiService(retrofit: Retrofit): NewsFeedApi {
+        return retrofit.create(NewsFeedApi::class.java)
     }
 
 }

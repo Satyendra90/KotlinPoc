@@ -1,4 +1,4 @@
-package com.kotlin.poc.ui.activity
+package com.kotlin.poc.ui.base
 
 import android.content.Intent
 import android.os.Bundle

@@ -17,9 +17,15 @@ android {
 
         /*Base url of web service*/
         buildConfigField "String", "BASE_URL", "\"https://dl.dropboxusercontent.com\""
-        buildConfigField "boolean", "enableLog", "true"
+        buildConfigField "boolean", "LOG_ENABLED", "true"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        testOptions {
+            unitTests {
+                includeAndroidResources = true
+            }
+        }
     }
     buildTypes {
 
@@ -43,8 +49,10 @@ dependencies {
 
     /*Retrofit- For networking*/
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.11.0'
+    implementation "io.reactivex.rxjava2:rxandroid:$rx_android_version"
 
     /*Glide- For image handling*/
     implementation "com.github.bumptech.glide:glide:$glide_version"
@@ -69,4 +77,8 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-v4'
         exclude module: 'recyclerview-v7'
     }
+
+    testImplementation 'org.mockito:mockito-core:2.23.0'
+    testImplementation 'android.arch.core:core-testing:1.1.1'
+    testImplementation 'org.robolectric:robolectric:4.3'
 }
