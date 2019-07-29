@@ -1,6 +1,5 @@
 package com.kotlin.poc.webservice
 
-import com.kotlin.poc.model.NewsFeedResponse
 import io.reactivex.Observable
 import retrofit2.http.GET
 

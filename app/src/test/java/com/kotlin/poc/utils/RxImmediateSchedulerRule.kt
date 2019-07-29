@@ -1,4 +1,4 @@
-package com.kotlin.poc.ui.utils
+package com.kotlin.poc.utils
 
 import io.reactivex.android.plugins.RxAndroidPlugins
 import io.reactivex.plugins.RxJavaPlugins

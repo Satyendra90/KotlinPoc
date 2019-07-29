@@ -1,7 +1,7 @@
-package com.kotlin.poc.di.component
+package com.kotlin.poc.dagger.component
 
-import com.kotlin.poc.di.module.ApiModule
-import com.kotlin.poc.ui.newsfeed.MainActivity
+import com.kotlin.poc.dagger.module.ApiModule
+import com.kotlin.poc.newsfeed.NewsFeedFragment
 import com.kotlin.poc.webservice.NewsFeedApi
 import dagger.Component
 import javax.inject.Singleton
@@ -12,8 +12,6 @@ import javax.inject.Singleton
 @Singleton
 @Component(modules = [ApiModule::class])
 interface AppComponent {
-
     fun getNewsFeedApiService(): NewsFeedApi
-
-    fun inject(activity: MainActivity)
+    fun inject(fragment: NewsFeedFragment)
 }

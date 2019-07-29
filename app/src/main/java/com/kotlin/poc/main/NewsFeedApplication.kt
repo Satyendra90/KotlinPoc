@@ -1,10 +1,9 @@
-package com.kotlin.poc.application
+package com.kotlin.poc.main
 
 import android.app.Application
-import com.kotlin.poc.di.component.AppComponent
-import com.kotlin.poc.di.component.DaggerAppComponent
-import com.kotlin.poc.di.module.ApiModule
-import com.kotlin.poc.webservice.NewsFeedApi
+import com.kotlin.poc.dagger.component.AppComponent
+import com.kotlin.poc.dagger.component.DaggerAppComponent
+import com.kotlin.poc.dagger.module.ApiModule
 
 class NewsFeedApplication : Application() {
 

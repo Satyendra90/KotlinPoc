@@ -1,14 +1,13 @@
-package com.kotlin.poc.factory
+package com.kotlin.poc.newsfeed
 
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
-import com.kotlin.poc.ui.newsfeed.NewsFeedViewModel
 import com.kotlin.poc.webservice.NewsFeedApi
 
 /**
  * will provide the instance of news feed view model
  */
-class NewsFeedViewModelFactory (private val newsFeedApi: NewsFeedApi): ViewModelProvider.Factory {
+class ViewModelFactory (private val newsFeedApi: NewsFeedApi): ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return if (modelClass.isAssignableFrom(NewsFeedViewModel::class.java)) {

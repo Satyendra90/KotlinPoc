@@ -1,12 +1,12 @@
-package com.kotlin.poc.ui.newsfeed
+package com.kotlin.poc.newsfeed
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import com.kotlin.poc.model.ApiCallbackWrapper
-import com.kotlin.poc.model.ApiDataWrapper
-import com.kotlin.poc.model.ApiError
-import com.kotlin.poc.model.NewsFeedResponse
+import com.kotlin.poc.webservice.ApiCallbackWrapper
+import com.kotlin.poc.webservice.ApiDataWrapper
+import com.kotlin.poc.webservice.ApiError
+import com.kotlin.poc.webservice.NewsFeedResponse
 import com.kotlin.poc.webservice.NewsFeedApi
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -51,7 +51,7 @@ class NewsFeedViewModel(private val newsFeedApi: NewsFeedApi): ViewModel() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(object : ApiCallbackWrapper<NewsFeedResponse>(){
                     override fun onSuccess(t: NewsFeedResponse) {
-                        newsFeeds.postValue(ApiDataWrapper(t, true,null))
+                        newsFeeds.postValue(ApiDataWrapper(t, true, null))
                     }
 
                     override fun onError(error: ApiError) {

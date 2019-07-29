@@ -1,4 +1,4 @@
-package com.kotlin.poc.ui.newsfeed
+package com.kotlin.poc.newsfeed
 
 import android.content.Context
 import android.graphics.drawable.Drawable
@@ -17,7 +17,7 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.kotlin.poc.R
-import com.kotlin.poc.model.NewsFeed
+import com.kotlin.poc.webservice.NewsFeed
 import java.util.*
 
 
@@ -32,7 +32,7 @@ class NewsFeedAdapter constructor(private val mContext: Context) : RecyclerView.
         this.mItems = ArrayList()
     }
 
-    fun setData(data: ArrayList<NewsFeed>) {
+    fun setData(data: List<NewsFeed>) {
         this.mItems = ArrayList()
         this.mItems!!.addAll(data)
         notifyDataSetChanged()
@@ -54,22 +54,15 @@ class NewsFeedAdapter constructor(private val mContext: Context) : RecyclerView.
         }
         else{
             viewHolder.setItemVisibility(true)
+            viewHolder.cpd.start()
 
-            if(newsFeed.image == null || newsFeed.image.isEmpty()){
-                viewHolder.imgNews.visibility = View.GONE
-            }
-            else{
-                viewHolder.imgNews.visibility = View.VISIBLE
-                viewHolder.cpd.start()
-
-                Glide.with(mContext)
-                        .load(newsFeed.image)
-                        .placeholder(viewHolder.cpd)
-                        .error(R.drawable.ic_image_error)
-                        .listener(viewHolder.requestListener)
-                        .centerCrop()
-                        .into(viewHolder.imgNews)
-            }
+            Glide.with(mContext)
+                    .load(newsFeed.image)
+                    .placeholder(viewHolder.cpd)
+                    .error(R.drawable.ic_image_error)
+                    .listener(viewHolder.requestListener)
+                    .centerCrop()
+                    .into(viewHolder.imgNews)
         }
     }
 

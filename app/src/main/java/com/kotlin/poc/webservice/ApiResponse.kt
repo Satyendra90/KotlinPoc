@@ -1,4 +1,4 @@
-package com.kotlin.poc.model
+package com.kotlin.poc.webservice
 
 import com.google.gson.annotations.SerializedName
 
@@ -8,7 +8,7 @@ data class NewsFeed(@SerializedName("title") val title: String?,
 
 
 data class NewsFeedResponse(@SerializedName("title") val title: String?,
-                            @SerializedName("rows") val newsList: ArrayList<NewsFeed>?)
+                            @SerializedName("rows") val newsList: List<NewsFeed>?)
 
 data class ApiDataWrapper<T>(var data: T?, var isSuccess: Boolean, val error: ApiError?)
 

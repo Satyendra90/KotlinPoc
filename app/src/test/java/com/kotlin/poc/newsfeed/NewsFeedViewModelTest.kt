@@ -1,10 +1,10 @@
-package com.kotlin.poc.ui.newsfeed
+package com.kotlin.poc.newsfeed
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.Observer
-import com.kotlin.poc.model.ApiDataWrapper
-import com.kotlin.poc.model.NewsFeedResponse
-import com.kotlin.poc.ui.utils.RxImmediateSchedulerRule
+import com.kotlin.poc.webservice.ApiDataWrapper
+import com.kotlin.poc.webservice.NewsFeedResponse
+import com.kotlin.poc.utils.RxImmediateSchedulerRule
 import com.kotlin.poc.webservice.NewsFeedApi
 import io.reactivex.Observable
 import junit.framework.Assert.assertEquals
@@ -16,7 +16,7 @@ import org.mockito.Mockito
 import org.mockito.Mockito.mock
 import org.mockito.MockitoAnnotations
 import org.mockito.junit.MockitoJUnitRunner
-
+import java.net.SocketException
 
 @RunWith(MockitoJUnitRunner::class)
 class NewsFeedViewModelTest {
@@ -56,13 +56,14 @@ class NewsFeedViewModelTest {
         val observer = mock(Observer::class.java) as Observer<ApiDataWrapper<NewsFeedResponse>>
         newsFeedViewModel.getNewsFeedListLiveData().observeForever(observer)
         newsFeedViewModel.loadNewsFeed()
+        Thread.sleep(4000)
 
         //verify
         assertNotNull(newsFeedViewModel.getNewsFeedListLiveData().value)
         assertEquals(newsFeedResponse.title, newsFeedViewModel.getNewsFeedListLiveData().value?.data?.title)
     }
 
-    /*@Test
+    @Test
     fun `get news feed data with error response`() {
 
         //mock data
@@ -75,11 +76,12 @@ class NewsFeedViewModelTest {
         val observer = mock(Observer::class.java) as Observer<ApiDataWrapper<NewsFeedResponse>>
         newsFeedViewModel.getNewsFeedListLiveData().observeForever(observer)
         newsFeedViewModel.loadNewsFeed()
+        Thread.sleep(4000)
 
         // Verify
         assertNotNull(newsFeedViewModel.getNewsFeedListLiveData().value)
         assertEquals(socketException.message, newsFeedViewModel.getNewsFeedListLiveData().value?.error?.msg)
-    }*/
+    }
 
     @After
     fun tearDown() {

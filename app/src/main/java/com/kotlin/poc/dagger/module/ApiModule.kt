@@ -1,4 +1,4 @@
-package com.kotlin.poc.di.module
+package com.kotlin.poc.dagger.module
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
