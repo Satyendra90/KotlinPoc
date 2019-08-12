@@ -2,10 +2,10 @@ package com.kotlin.poc.newsfeed
 
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.lifecycle.Observer
-import com.kotlin.poc.webservice.ApiDataWrapper
-import com.kotlin.poc.webservice.NewsFeedResponse
 import com.kotlin.poc.utils.RxImmediateSchedulerRule
+import com.kotlin.poc.webservice.ApiDataWrapper
 import com.kotlin.poc.webservice.NewsFeedApi
+import com.kotlin.poc.webservice.NewsFeedResponse
 import io.reactivex.Observable
 import junit.framework.Assert.assertEquals
 import junit.framework.Assert.assertNotNull

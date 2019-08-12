@@ -75,23 +75,16 @@ class NewsFeedFragment : Fragment(){
      */
     private fun initializeViewModel() {
         viewModel = ViewModelProviders.of(this, ViewModelFactory(newsFeedApi)).get(NewsFeedViewModel::class.java)
-        viewModel.getNewsFeedListLiveData().observe(this, Observer<ApiDataWrapper<NewsFeedResponse>> {
 
+        showLoader()
+        viewModel.getNewsFeedListLiveData().observe(this, Observer<ApiDataWrapper<NewsFeedResponse>> {
+            hideLoader()
             if (it != null) {
                 if (it.isSuccess) {
                     updateNewsFeedList(it.data)
                 } else {
                     showNetworkErrorMessage(it.error)
                 }
-            }
-        })
-
-        viewModel.isLoadingLiveData().observe(this, Observer {
-            if(it!!){
-                showLoader()
-            }
-            else{
-                hideLoader()
             }
         })
     }
@@ -101,6 +94,8 @@ class NewsFeedFragment : Fragment(){
      */
     private fun registerSwipeRefreshListener(){
         swipeRefreshLayout.setOnRefreshListener {
+            showLoader()
+            showNoDataFoundMessage(false)
             viewModel.refreshNewsFeed()
         }
     }
@@ -112,6 +107,7 @@ class NewsFeedFragment : Fragment(){
 
         if (newsFeedResponse != null) {
             toolBarTitleListener?.onToolbarTitleChange(newsFeedResponse.title ?: getString(R.string.app_name))
+            showNoDataFoundMessage(newsFeedResponse.newsList.isNullOrEmpty())
 
             val list: List<NewsFeed>? = newsFeedResponse.newsList
             if(list != null){
@@ -143,5 +139,17 @@ class NewsFeedFragment : Fragment(){
      */
     private fun hideLoader() {
         swipeRefreshLayout.isRefreshing = false
+    }
+
+    /**
+     * show no data found message if list is either null or empty
+     */
+    private fun showNoDataFoundMessage(noDataFound: Boolean){
+        if(noDataFound){
+            tvNoDataFound.visibility = View.VISIBLE
+        }
+        else{
+            tvNoDataFound.visibility = View.GONE
+        }
     }
 }

@@ -3,11 +3,7 @@ package com.kotlin.poc.newsfeed
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
-import com.kotlin.poc.webservice.ApiCallbackWrapper
-import com.kotlin.poc.webservice.ApiDataWrapper
-import com.kotlin.poc.webservice.ApiError
-import com.kotlin.poc.webservice.NewsFeedResponse
-import com.kotlin.poc.webservice.NewsFeedApi
+import com.kotlin.poc.webservice.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -23,15 +19,10 @@ class NewsFeedViewModel(private val newsFeedApi: NewsFeedApi): ViewModel() {
         }
     }
 
-    private val loadingLiveData = MutableLiveData<Boolean>()
     private val compositeDisposable = CompositeDisposable()
 
     fun getNewsFeedListLiveData() : LiveData<ApiDataWrapper<NewsFeedResponse>>{
         return newsFeeds
-    }
-
-    fun isLoadingLiveData(): LiveData<Boolean>{
-        return loadingLiveData
     }
 
     /**
@@ -45,10 +36,24 @@ class NewsFeedViewModel(private val newsFeedApi: NewsFeedApi): ViewModel() {
      * will get the news feed data from remote api
      */
     fun loadNewsFeed(){
-        setLoadingVisibility(true)
         val disposable = newsFeedApi.getNewsFeed()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .map { newFeedResponse ->
+                    val itr = newFeedResponse.newsList?.iterator()
+
+                    if(itr != null){
+                        //filter data if its content is either null or blank
+                        for (newsFeed in itr) {
+                            if (newsFeed.title.isNullOrEmpty()
+                                    && newsFeed.description.isNullOrEmpty()
+                                    && newsFeed.image.isNullOrEmpty()) {
+                                itr.remove()
+                            }
+                        }
+                    }
+                    newFeedResponse
+                }
                 .subscribeWith(object : ApiCallbackWrapper<NewsFeedResponse>(){
                     override fun onSuccess(t: NewsFeedResponse) {
                         newsFeeds.postValue(ApiDataWrapper(t, true, null))
@@ -56,20 +61,10 @@ class NewsFeedViewModel(private val newsFeedApi: NewsFeedApi): ViewModel() {
 
                     override fun onError(error: ApiError) {
                         newsFeeds.postValue(ApiDataWrapper(null, false, error))
-                        setLoadingVisibility(false)
-                    }
-
-                    override fun onComplete() {
-                        super.onComplete()
-                        setLoadingVisibility(false)
                     }
                 })
 
         compositeDisposable.add(disposable)
-    }
-
-    private fun setLoadingVisibility(visible: Boolean){
-        loadingLiveData.postValue(visible)
     }
 
     override fun onCleared() {

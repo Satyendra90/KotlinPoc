@@ -8,7 +8,7 @@ data class NewsFeed(@SerializedName("title") val title: String?,
 
 
 data class NewsFeedResponse(@SerializedName("title") val title: String?,
-                            @SerializedName("rows") val newsList: List<NewsFeed>?)
+                            @SerializedName("rows") val newsList: MutableList<NewsFeed>?)
 
 data class ApiDataWrapper<T>(var data: T?, var isSuccess: Boolean, val error: ApiError?)
 
